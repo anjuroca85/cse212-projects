@@ -11,7 +11,8 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Error Message: Assert.AreEqual failed. Expected:<Bob>. Actual:<Sue>. PersonQueue.Enqueue inserted new people at the front of the list.
+    // This caused the queue  to return the most recently added person first and not using the FIFO order for queues.
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -43,7 +44,8 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
-    // Defect(s) Found: 
+    // Defect(s) Found: Error Message: Assert.AreEqual failed. Expected:<Bob>. Actual:<Sue>. PersonQueue.Enqueue inserted new people at the front of the list.
+    // This caused the queue  to return the most recently added person first and not using the FIFO order for queues.
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -85,7 +87,9 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Error Message: Assert.AreEqual failed. Expected:<Bob>. Actual:<Sue>. The queue returned people in the wrong order because PersonQueue
+    // was not following FIFO behavior. Additionally, people with 0 or negative turns
+    // were not correctly handled as infinite-turn players.
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -116,7 +120,9 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Error Message: Assert.AreEqual failed. Expected:<Bob>. Actual:<Sue>. The queue returned people in the wrong order because PersonQueue
+    // was not following FIFO behavior. Additionally, people with 0 or negative turns
+    // were not correctly handled as infinite-turn players.
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -143,7 +149,7 @@ public class TakingTurnsQueueTests
     [TestMethod]
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
-    // Defect(s) Found: 
+    // Defect(s) Found: None
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();

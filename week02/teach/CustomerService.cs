@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System.ComponentModel.Design;
+
+/// <summary>
 /// Maintain a Customer Service Queue.  Allows new customers to be 
 /// added and allows customers to be serviced.
 /// </summary>
@@ -11,24 +13,72 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: if invalid input, does it default to 10?
+        // Expected Result: input less than or equal to zero result in 10
         Console.WriteLine("Test 1");
-
-        // Defect(s) Found: 
+        var service = new CustomerService(3);
+        service = new CustomerService(-1);
+        Console.WriteLine($"Size should be 10:{service}");
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: adding a new customer and serve that customer
+        // Expected Result: Displays the customer added
         Console.WriteLine("Test 2");
+
+        service = new CustomerService(3);
+        service.AddNewCustomer();
+        Console.WriteLine($"Before serving customer: {service}");
+        service.ServeCustomer();
+        Console.WriteLine($"After serving customer: {service}");
+
+        Console.WriteLine("=================");
+
+        // Add more Test Cases As Needed Below
+
+        // Test 3
+        // Scenario: Enforcing max size in the queue
+        // Expected Result: DIsplay an error if 4th one is added to the queue
+        Console.WriteLine("Test 3");
+        service = new CustomerService(3);
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        Console.WriteLine($"Service Queue: {service}");
+
+        // Defect(s) Found: his found that I need to do >= instead of > in AddNewCustomer
+
+        Console.WriteLine("=================");
+
+        // Test 4
+        // Scenario: Adding two customers and serve customers in the right order
+        // Expected Result: Ths one should display the customers in the same order
+        Console.WriteLine("Test 4");
+        service = new CustomerService(3);
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        Console.WriteLine($"Before serving customers: {service}");
+        service.ServeCustomer();
+        service.ServeCustomer();
+        Console.WriteLine($"After serving customers: {service}");
 
         // Defect(s) Found: 
 
         Console.WriteLine("=================");
 
-        // Add more Test Cases As Needed Below
+        // Test 5
+        // Scenario: Can I serve a customer if there is no customer?
+        // Expected Result: This should display some error message
+        Console.WriteLine("Test 5");
+        service = new CustomerService(3);
+        service.ServeCustomer();
+
+        // Defect(s) Found: 
+
+        Console.WriteLine("=================");
+        
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +117,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,8 +138,15 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        if (_queue.Count <= 0)
+        {
+            Console.WriteLine("No customers in queue.");
+            return;
+        }
+        
+        // _queue.RemoveAt(0);
         var customer = _queue[0];
+        _queue.RemoveAt(0);
         Console.WriteLine(customer);
     }
 
